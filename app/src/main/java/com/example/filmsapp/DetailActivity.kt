@@ -35,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
             return
         }
 
+        NotificationHelper.createNotificationChannel(this)
         setupWindowInsets()
 
         editTextTitle = findViewById(R.id.editTextFilmTitle)
@@ -166,6 +167,12 @@ class DetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@DetailActivity, "Фильм обновлён", Toast.LENGTH_SHORT)
                         .show()
+                    NotificationHelper.showNotification(
+                        this@DetailActivity,
+                        "Фильм обновлён",
+                        "Фильм \"${film.title}\" успешно обновлён",
+                        filmId
+                    )
                     finish()
                 } else {
                     Log.e("DetailActivity", "updateFilm error: ${response.code()}")
@@ -204,6 +211,12 @@ class DetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@DetailActivity, "Фильм удалён", Toast.LENGTH_SHORT)
                         .show()
+                    NotificationHelper.showNotification(
+                        this@DetailActivity,
+                        "Фильм удалён",
+                        "Фильм \"${film.title}\" удалён из списка",
+                        filmId
+                    )
                     finish()
                 } else {
                     Log.e("DetailActivity", "deleteFilm error: ${response.code()}")

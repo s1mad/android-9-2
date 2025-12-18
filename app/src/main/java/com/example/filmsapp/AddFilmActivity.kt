@@ -27,6 +27,7 @@ class AddFilmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_film)
 
+        NotificationHelper.createNotificationChannel(this)
         setupWindowInsets()
 
         editTextTitle = findViewById(R.id.editTextFilmTitle)
@@ -126,6 +127,12 @@ class AddFilmActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@AddFilmActivity, "Фильм добавлен", Toast.LENGTH_SHORT)
                         .show()
+                    NotificationHelper.showNotification(
+                        this@AddFilmActivity,
+                        "Фильм добавлен",
+                        "Фильм \"${film.title}\" успешно добавлен в список",
+                        film.id ?: System.currentTimeMillis().toInt()
+                    )
                     finish()
                 } else {
                     Log.e("AddFilmActivity", "createFilm error: ${response.code()}")
