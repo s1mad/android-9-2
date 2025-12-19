@@ -1,9 +1,35 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: film-db
+    environment:
+      POSTGRES_USER: films_user
+      POSTGRES_PASSWORD: films_password
+      POSTGRES_DB: films_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U films_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api:
     build: .
     ports:
       - "5001:5001"
     container_name: film-api
+    environment:
+      DATABASE_URL: postgresql://films_user:films_password@db:5432/films_db
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+
 
